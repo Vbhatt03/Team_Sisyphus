@@ -36,6 +36,13 @@
             <p class="text-gray-500 mt-1">(Form IF-4)</p>
         </header>
 
+        <!-- File Upload Section -->
+        <div class="mb-8 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
+            <label for="jsonFile" class="block text-sm font-medium text-gray-700 mb-2">Upload JSON File to Auto-fill</label>
+            <p class="text-xs text-gray-500 mb-3">Select a JSON file to automatically populate the form fields.</p>
+            <input type="file" id="jsonFile" name="jsonFile" accept=".json" class="mx-auto block w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"/>
+        </div>
+
         <form action="#" method="POST">
             <!-- Section 1: Case Details -->
             <fieldset class="mb-8">
@@ -68,10 +75,10 @@
                     <div class="md:col-span-3">
                         <label class="block text-sm mb-1">Name of property seized/received</label>
                         <div class="flex flex-wrap items-center gap-4 mt-1">
-                            <label><input type="radio" name="property_type" value="stolen" class="mr-1"> Stolen</label>
-                            <label><input type="radio" name="property_type" value="unclaimed" class="mr-1"> Unclaimed</label>
-                            <label><input type="radio" name="property_type" value="unlawful" class="mr-1"> Unlawful Possession</label>
-                            <label><input type="radio" name="property_type" value="others" class="mr-1"> Others</label>
+                            <label><input type="radio" id="property_type_stolen" name="property_type" value="stolen" class="mr-1"> Stolen</label>
+                            <label><input type="radio" id="property_type_unclaimed" name="property_type" value="unclaimed" class="mr-1"> Unclaimed</label>
+                            <label><input type="radio" id="property_type_unlawful" name="property_type" value="unlawful" class="mr-1"> Unlawful Possession</label>
+                            <label><input type="radio" id="property_type_others" name="property_type" value="others" class="mr-1"> Others</label>
                         </div>
                     </div>
                 </div>
@@ -203,5 +210,69 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('jsonFile');
+
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        populateForm(jsonData);
+                    } catch (error) {
+                        console.error("Error parsing JSON file:", error);
+                        alert("There was an error reading the JSON file. Please ensure it is correctly formatted.");
+                    }
+                };
+
+                reader.onerror = function() {
+                    console.error("Error reading file:", reader.error);
+                    alert("Failed to read the file.");
+                };
+
+                reader.readAsText(file);
+            });
+
+            function populateForm(data) {
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const value = data[key];
+                        const element = document.getElementById(key);
+
+                        if (element) {
+                             if (element.type === 'radio') {
+                                const radioToSelect = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                                if (radioToSelect) {
+                                    radioToSelect.checked = true;
+                                }
+                            } else {
+                                element.value = value;
+                            }
+                        } else {
+                            // Handle radio groups where the key might not match an ID directly
+                            const radioGroup = document.getElementsByName(key);
+                            if(radioGroup.length > 0) {
+                                for(const radio of radioGroup){
+                                    if(radio.value === value){
+                                        radio.checked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+

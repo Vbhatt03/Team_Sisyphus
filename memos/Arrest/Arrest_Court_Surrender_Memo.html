@@ -36,7 +36,15 @@
             <p class="text-gray-500 mt-1">(Form IF-3 - Separate Memo for each accused)</p>
         </header>
 
-        <form action="#" method="POST">
+        <!-- File Upload Section -->
+        <div class="mb-8 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
+            <label for="jsonFile" class="block text-sm font-medium text-gray-700 mb-2">Upload JSON File to Auto-fill</label>
+            <p class="text-xs text-gray-500 mb-3">Select a JSON file to automatically populate the form fields.</p>
+            <input type="file" id="jsonFile" name="jsonFile" accept=".json" class="mx-auto block w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"/>
+        </div>
+
+
+        <form action="#" method="POST" id="arrest-form">
             <!-- Section 1: Case Details -->
             <fieldset class="mb-8">
                 <legend class="form-section-title">Case Details</legend>
@@ -94,7 +102,7 @@
                     </div>
                     <div class="md:col-span-3">
                         <label class="block text-sm mb-1">Status</label>
-                        <select name="status" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <select id="status" name="status" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                             <option>Arrested and sent up</option>
                             <option>Arrested and released on bail</option>
                             <option>Surrendered in court and bailed out</option>
@@ -209,5 +217,77 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('jsonFile');
+
+            // Listen for changes on the file input element
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    return; // Exit if no file is selected
+                }
+
+                const reader = new FileReader();
+
+                // This function runs when the file has been successfully read
+                reader.onload = function(e) {
+                    try {
+                        // Parse the file content as JSON
+                        const jsonData = JSON.parse(e.target.result);
+                        // Call the function to fill the form with the parsed data
+                        populateForm(jsonData);
+                    } catch (error) {
+                        console.error("Error parsing JSON file:", error);
+                        alert("There was an error reading the JSON file. Please ensure it is correctly formatted.");
+                    }
+                };
+
+                // This function runs if there's an error reading the file
+                reader.onerror = function() {
+                    console.error("Error reading file:", reader.error);
+                    alert("Failed to read the file.");
+                };
+
+                // Start reading the file as text
+                reader.readAsText(file);
+            });
+
+            /**
+             * Populates the form fields based on the provided JSON data.
+             * It iterates through the keys of the JSON object and finds
+             * form elements with a matching 'id'.
+             * @param {object} data The JSON data to populate the form with.
+             */
+            function populateForm(data) {
+                // Loop through each key in the JSON data object
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const value = data[key];
+                        
+                        // Find the form element with an ID that matches the current key
+                        const element = document.getElementById(key);
+
+                        if (element) {
+                            // Check the element's type to handle it correctly
+                            if (element.type === 'radio') {
+                                // For radio buttons, we need to find the specific input with the matching value
+                                const radioToSelect = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                                if (radioToSelect) {
+                                    radioToSelect.checked = true;
+                                }
+                            } else {
+                                // For standard inputs (text, date, time), textareas, and selects, set the value directly
+                                element.value = value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>
+
