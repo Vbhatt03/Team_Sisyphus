@@ -1,0 +1,6 @@
+pdfplumber 
+pytesseract 
+pillow 
+regex
+pymupdf
+python-dateutil

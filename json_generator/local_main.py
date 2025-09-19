@@ -14,7 +14,7 @@ from pathlib import Path
 import logging
 import json
 import argparse
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -31,13 +31,13 @@ try:
     from medical_report_parser import parse_medical_report
 except Exception:
     try:
-        from medical_records_parser import parse_medical_report
+        from medical_report_parser import parse_medical_report
     except Exception as e:
         logger.error("Failed to import parse_medical_report: %s", e)
         parse_medical_report = None
 
 try:
-    from statement_parser import parse_statement_document
+    from statement_doc_parser import parse_statement_document
 except Exception as e:
     logger.error("Failed to import parse_statement_document: %s", e)
     parse_statement_document = None
@@ -60,13 +60,13 @@ def _safe_call_parser(parser_func, file_path: str) -> Dict[str, Any]:
         return {"error": str(e)}
 
 
-def main(file_map: Optional[Dict[str, Optional[str]]] = None, output_path: str = "case_data.json"):
+def main(file_map: Optional[Dict[str, Optional[Any]]] = None, output_path: str = "case_data.json"):
     """
     Orchestrate parsing of multiple document types.
 
     Args:
         file_map: Optional mapping with keys 'fir', 'medical_report', 'statement'
-                  mapping to file paths (strings) or None. If None, uses defaults.
+                mapping to file paths (strings) or None. If None, uses defaults.
         output_path: Where to write the combined JSON.
     """
     defaults = {
@@ -87,26 +87,49 @@ def main(file_map: Optional[Dict[str, Optional[str]]] = None, output_path: str =
     }
 
     combined_results: Dict[str, Any] = {}
-    for doc_type, path in file_map.items():
+    
+    # Handle the single-file parsers
+    for doc_type in ["fir", "statement"]:
+        path = file_map.get(doc_type)
         parser = parser_map.get(doc_type)
-        if parser is None:
-            logger.warning("No parser available for '%s'. Skipping.", doc_type)
-            combined_results[doc_type] = {"error": "parser_not_available"}
-            continue
 
-        if not path:
-            logger.warning("No file path for '%s'. Skipping.", doc_type)
-            combined_results[doc_type] = {"error": "file_path_missing"}
+        if not path or not parser:
+            logger.warning("No path or parser for '%s'. Skipping.", doc_type)
+            combined_results[doc_type] = {"error": "file_path_missing" if not path else "parser_not_available"}
             continue
-
+        
         p = Path(path)
         if not p.exists():
             logger.warning("File for '%s' not found at %s. Skipping.", doc_type, path)
             combined_results[doc_type] = {"error": "file_not_found", "file_path": str(p)}
             continue
-
+            
         outcome = _safe_call_parser(parser, str(p))
         combined_results[doc_type] = outcome.get("result") if "result" in outcome else {"error": outcome.get("error")}
+
+    # Handle multiple medical reports
+    medical_report_paths = file_map.get("medical_report")
+    if medical_report_paths:
+        combined_results["medical_reports"] = []
+        parser = parser_map.get("medical_report")
+        if not parser:
+            combined_results["medical_reports"].append({"error": "parser_not_available"})
+        else:
+            # If a single path is given, it's a string; convert to list for iteration
+            if isinstance(medical_report_paths, str):
+                medical_report_paths = [medical_report_paths]
+
+            for path in medical_report_paths:
+                p = Path(path)
+                if not p.exists():
+                    logger.warning("Medical report file not found at %s. Skipping.", path)
+                    combined_results["medical_reports"].append({"error": "file_not_found", "file_path": str(p)})
+                    continue
+
+                outcome = _safe_call_parser(parser, str(p))
+                parsed_data = outcome.get("result") if "result" in outcome else {"error": outcome.get("error")}
+                parsed_data["file_path"] = str(p)
+                combined_results["medical_reports"].append(parsed_data)
 
     # Write JSON output
     out_path = Path(output_path)
@@ -122,15 +145,15 @@ def main(file_map: Optional[Dict[str, Optional[str]]] = None, output_path: str =
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Modular main to parse legal/medical documents.")
     parser.add_argument("--fir", type=str, help="FIR PDF path (overrides default).")
-    parser.add_argument("--medical", type=str, help="Medical report PDF path (overrides default).")
+    parser.add_argument("--medical", nargs='+', help="Medical report PDF paths (accepts multiple).")
     parser.add_argument("--statement", type=str, help="Statement PDF path (overrides default).")
     parser.add_argument("--output", "-o", type=str, default="case_data.json", help="Output JSON file path.")
     args = parser.parse_args()
 
     file_map = {
-        "fir": args.fir or None,
-        "medical_report": args.medical or None,
-        "statement": args.statement or None
+        "fir": args.fir,
+        "medical_report": args.medical,
+        "statement": args.statement
     }
 
     main(file_map, output_path=args.output)
