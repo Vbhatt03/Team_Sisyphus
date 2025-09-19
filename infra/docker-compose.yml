@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ../backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../backend/app:/app/app
+      - ../data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://nyaya_user:nyaya_password@db:5432/nyaya_db
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  db:
+    image: pgvector/pgvector:pg16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    environment:
+      - POSTGRES_USER=nyaya_user
+      - POSTGRES_PASSWORD=nyaya_password
+      - POSTGRES_DB=nyaya_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nyaya_user -d nyaya_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+

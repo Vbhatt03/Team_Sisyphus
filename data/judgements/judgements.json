@@ -1,0 +1,30 @@
+[
+  {
+    "case_title": "State of Punjab v. Gurmit Singh",
+    "citation": "1996 AIR 1393, 1996 SCC (2) 384",
+    "court": "Supreme Court of India",
+    "year": 1996,
+    "tags": ["delayed_fir", "credibility_of_victim", "corroboration"],
+    "summary": "This case deals with the evidentiary value of a victim's testimony in a rape case and addresses the issue of delays in filing the First Information Report (FIR).",
+    "key_takeaway": "A delay in filing an FIR is not, by itself, a reason to dismiss the case. However, the prosecution must provide a satisfactory explanation for the delay. The court affirmed that the testimony of a rape victim is given high weight and does not require corroboration."
+  },
+  {
+    "case_title": "Mukesh & Anr v. State for NCT of Delhi & Ors",
+    "citation": "(2017) 6 SCC 1",
+    "court": "Supreme Court of India",
+    "year": 2017,
+    "tags": ["dying_declaration", "medical_evidence", "nirbhaya_case"],
+    "summary": "The infamous 'Nirbhaya' case. This judgment elaborately discusses the admissibility and evidentiary value of dying declarations, the importance of prompt medical examination, and the use of scientific evidence like DNA.",
+    "key_takeaway": "A dying declaration can be the sole basis for conviction if it is found to be credible and voluntary. Minor discrepancies in evidence should not discard the core testimony if it is consistent. Prompt and thorough medical evidence is crucial."
+  },
+  {
+    "case_title": "Sakshi v. Union of India",
+    "citation": "(2004) 5 SCC 518",
+    "court": "Supreme Court of India",
+    "year": 2004,
+    "tags": ["child_witness", "pocso", "victim_protection"],
+    "summary": "This case led to significant reforms in the trial procedures for child sexual abuse cases, emphasizing the need for a victim-friendly court environment.",
+    "key_takeaway": "The testimony of a child witness must be handled with sensitivity. The court environment should not be intimidating. Measures like in-camera proceedings and avoiding direct confrontation with the accused are essential."
+  }
+]
+

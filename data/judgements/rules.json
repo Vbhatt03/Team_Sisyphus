@@ -1,0 +1,11 @@
+[
+  {
+    "rule_id": "RULE_001",
+    "name": "Delayed FIR Check",
+    "condition": "case.fir_date is not None and case.incident_date is not None and (case.fir_date - case.incident_date).days > 1",
+    "alert_title": "Potential Issue: Delayed FIR",
+    "alert_message_template": "The FIR was filed {delay_days} days after the incident. Ensure the victim's statement clearly explains the reason for the delay. See relevant precedent.",
+    "relevant_precedent_tag": "delayed_fir"
+  }
+]
+

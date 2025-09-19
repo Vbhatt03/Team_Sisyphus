@@ -1,0 +1,24 @@
+sentence-transformers
+faiss-cpu
+pdfplumber
+torch  # required for sentence-transformers (CPU version)
+numpy
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pgvector
+python-dotenv
+alembic
+torch
+numpy
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pgvector
+python-dotenv
+alembic
+torch
