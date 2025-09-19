@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrest/Court Surrender Memo (Form IF-3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-section-title {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+    <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">ARREST/COURT SURRENDER MEMO</h1>
+            <p class="text-gray-500 mt-1">(Form IF-3 - Separate Memo for each accused)</p>
+        </header>
+
+        <form action="#" method="POST">
+            <!-- Section 1: Case Details -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Case Details</legend>
+                <div class="form-grid">
+                    <div>
+                        <label for="district" class="block text-sm mb-1">District</label>
+                        <input type="text" id="district" name="district" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="ps" class="block text-sm mb-1">Police Station (P.S.)</label>
+                        <input type="text" id="ps" name="ps" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="year" class="block text-sm mb-1">Year</label>
+                        <input type="number" id="year" name="year" placeholder="YYYY" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="fir_no" class="block text-sm mb-1">FIR No. / Proceeding No.</label>
+                        <input type="text" id="fir_no" name="fir_no" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div>
+                        <label for="fir_date" class="block text-sm mb-1">Date</label>
+                        <input type="date" id="fir_date" name="fir_date" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="accused_code" class="block text-sm mb-1">Alphanumeric code of Accused</label>
+                        <input type="text" id="accused_code" name="accused_code" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Arrest/Surrender Details -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Arrest/Surrender Details</legend>
+                <div class="form-grid">
+                    <div>
+                        <label for="arrest_date" class="block text-sm mb-1">Date of Arrest / Surrender</label>
+                        <input type="date" id="arrest_date" name="arrest_date" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="arrest_time" class="block text-sm mb-1">Time of Arrest / Surrender</label>
+                        <input type="time" id="arrest_time" name="arrest_time" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div>
+                        <label for="gd_no" class="block text-sm mb-1">G.D. No.</label>
+                        <input type="text" id="gd_no" name="gd_no" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="court_name" class="block text-sm mb-1">Name of the Court (if surrendered)</label>
+                        <input type="text" id="court_name" name="court_name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label for="acts_sections" class="block text-sm mb-1">Acts and Sections</label>
+                        <input type="text" id="acts_sections" name="acts_sections" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm mb-1">Status</label>
+                        <select name="status" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            <option>Arrested and sent up</option>
+                            <option>Arrested and released on bail</option>
+                            <option>Surrendered in court and bailed out</option>
+                            <option>Surrendered in court and sent to judicial custody</option>
+                            <option>Surrendered in court and remanded to Police custody</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 3: Particulars of the Accused -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Particulars of the Accused</legend>
+                <div class="form-grid md:grid-cols-3">
+                    <div>
+                        <label for="accused_name" class="block text-sm mb-1">Name</label>
+                        <input type="text" id="accused_name" name="accused_name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="father_husband_name" class="block text-sm mb-1">Father's / Husband's Name</label>
+                        <input type="text" id="father_husband_name" name="father_husband_name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="alias1" class="block text-sm mb-1">First Alias</label>
+                        <input type="text" id="alias1" name="alias1" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="nationality" class="block text-sm mb-1">Nationality</label>
+                        <input type="text" id="nationality" name="nationality" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="passport_no" class="block text-sm mb-1">Passport No.</label>
+                        <input type="text" id="passport_no" name="passport_no" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div>
+                        <label for="passport_issue_date" class="block text-sm mb-1">Date of Issue</label>
+                        <input type="date" id="passport_issue_date" name="passport_issue_date" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div>
+                        <label for="passport_issue_place" class="block text-sm mb-1">Place of Issue</label>
+                        <input type="text" id="passport_issue_place" name="passport_issue_place" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="religion" class="block text-sm mb-1">Religion</label>
+                        <input type="text" id="religion" name="religion" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div>
+                        <label for="caste" class="block text-sm mb-1">Caste/Tribe</label>
+                        <input type="text" id="caste" name="caste" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="occupation" class="block text-sm mb-1">Occupation</label>
+                        <input type="text" id="occupation" name="occupation" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <div class="md:col-span-3">
+                        <label for="permanent_address" class="block text-sm mb-1">Permanent Address</label>
+                        <textarea id="permanent_address" name="permanent_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label for="present_address" class="block text-sm mb-1">Present Address</label>
+                        <textarea id="present_address" name="present_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+             <!-- Section 4: Physical Features -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Physical Features & Profile</legend>
+                 <div class="form-grid md:grid-cols-4">
+                     <div>
+                        <label for="complexion" class="block text-sm mb-1">Complexion</label>
+                        <input type="text" id="complexion" name="complexion" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="hair" class="block text-sm mb-1">Hair</label>
+                        <input type="text" id="hair" name="hair" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="eye" class="block text-sm mb-1">Eye</label>
+                        <input type="text" id="eye" name="eye" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="scar" class="block text-sm mb-1">Scar</label>
+                        <input type="text" id="scar" name="scar" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="tattoo" class="block text-sm mb-1">Tattoo</label>
+                        <input type="text" id="tattoo" name="tattoo" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="income_group" class="block text-sm mb-1">Income Group</label>
+                        <select id="income_group" name="income_group" class="w-full p-2 border border-gray-300 rounded-lg">
+                            <option>Lower Income</option>
+                            <option>Lower Middle Income</option>
+                            <option>Middle Income</option>
+                            <option>Upper Middle Income</option>
+                            <option>Upper Income</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Fingerprint Taken?</label>
+                         <div class="flex items-center space-x-4 mt-1">
+                            <label><input type="radio" name="fingerprint" value="yes" class="mr-1"> Yes</label>
+                            <label><input type="radio" name="fingerprint" value="no" class="mr-1"> No</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="mt-10 flex justify-end">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">Submit Form</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
