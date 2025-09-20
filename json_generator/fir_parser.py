@@ -49,65 +49,112 @@ def extract_text_from_pdf_in_batches(pdf_path, api_key):
     return "\n\n".join(full_text)
 
 # --- Core parsing logic (Modified for Security) ---
-def parse_fir_data(text):
+import re
+
+def parse_fir_data(text: str) -> dict:
     """
-    Parses FIR text into structured JSON, with sensitive PII fields
-    hardcoded to null for security.
+    Parses FIR text into a structured JSON using regular expressions.
+    This function is designed to be a self-contained module for detection and writing.
     """
     data = {}
 
-    # 1️⃣ FIR basic details (Non-sensitive - Parsed as normal)
-    fir_match = re.search(
-        r"P\.S\.\s*(.*?)\s*[\r\n]+Year\s*(\d{4})\s*[\r\n]+FIR\s*No\.?\s*([\d\/]+)\s*[\r\n]+Date\s*[:\-]?\s*([\d\/\-]+)",
-        text, re.IGNORECASE
+    # Helper to clean extracted strings
+    def clean(value):
+        return value.strip() if value else None
+
+    # 1. FIR Basic Details (Section 1)
+    # This regex looks for the specific labels in the header of the FIR.
+    fir_details_match = re.search(
+        r"District:\s*(?P<district>.*?)\s*P\.S\.:\s*(?P<ps>.*?)\s*Year:\s*(?P<year>\d{4})\s*FIR No\.\s*(?P<fir_no>[\d\/]+)\s*Date:\s*(?P<date>[\d\-]+)\s*Time:\s*(?P<time>[\d\:]+)",
+        text, re.DOTALL
     )
-    if fir_match:
-        data['police_station'] = fir_match.group(1).strip()
-        data['year'] = fir_match.group(2).strip()
-        data['fir_no'] = fir_match.group(3).strip()
-        data['fir_date'] = fir_match.group(4).strip()
-    else:
-        # Fallback for non-sensitive data
-        ps_match = re.search(r"(\b[A-Z][a-zA-Z\s]+)\s+PS", text)
-        fir_no_match = re.search(r"Cr\.?\s*No\.?\s*([\d\/]+)", text, re.IGNORECASE)
-        data['police_station'] = ps_match.group(1).strip() if ps_match else None
-        data['fir_no'] = fir_no_match.group(1).strip() if fir_no_match else None
-        data.update({'year': None, 'fir_date': None})
+    if fir_details_match:
+        data['fir_details'] = {k: clean(v) for k, v in fir_details_match.groupdict().items()}
 
-    # 2️⃣ Acts and Sections (Non-sensitive - Parsed as normal)
-    acts_and_sections = []
-    bns_match = re.search(r"BHARATIYA\s+NYAYA\s+SANHITA.*?(\d+\(\d+\))", text, re.IGNORECASE | re.DOTALL)
-    if bns_match:
-        acts_and_sections.append({
-            "act": "THE BHARATIYA NYAYA SANHITA (BNS), 2023",
-            "section": bns_match.group(1)
-        })
-    goa_act_match = re.search(r"Goa\s+Children.?s\s+Act\s+2003\s*([\d]+)", text, re.IGNORECASE)
-    if goa_act_match:
-        acts_and_sections.append({
-            "act": "The Goa Children's Act 2003",
-            "section": goa_act_match.group(1).strip()
-        })
-    data['acts_and_sections'] = acts_and_sections
+    # 2. Acts and Sections (Section 2)
+    # First, isolate the text block between "Act and Sections:" and "3.".
+    acts_section_block = re.search(r"Act and Sections:\s*([\s\S]*?)\s*3\.", text)
+    if acts_section_block:
+        # Then, find all lines that look like "Act Name", "Section Number"
+        matches = re.findall(r'"(.*?)"\s*,\s*"([^"]+)"', acts_section_block.group(1))
+        data['acts_and_sections'] = [{'act': clean(act), 'section': clean(sec)} for act, sec in matches]
 
-    # 3️⃣ Complainant/Informant (MODIFIED FOR SECURITY)
-    # This entire block is now hardcoded to null to protect personal information.
-    data['complainant_informant'] = {
-        "name": None,
-        "address": None
-    }
+    # 3. Complainant / Informant (Section 6)
+    # Isolate the block between "Complainant/Informant" and the next section "7."
+    # Corrected logic for Complainant / Informant (Section 6)
+    complainant_block_match = re.search(r"6\.\s*Complainant/Informant\s*([\s\S]*?)7\.", text)
+    if complainant_block_match:
+        complainant_text = complainant_block_match.group(1)
+        details = {}
+        
+        # Define a list of the fields we expect to find in this section.
+        fields_to_find = [
+            'Name', 'Relation', 'Nationality', 'Occupation', 
+            'Date of Birth', 'Age', 'Present Address', 'Permanent Address'
+        ]
+        
+        for field in fields_to_find:
+            # This more flexible regex finds the field name and then captures the value
+            # that follows, handling variations in newlines, commas, and quotes.
+            # It looks for the field, then potential junk characters, then captures the clean value.
+            pattern = re.compile(rf'{field}\s*(?:[",\s]*\n)?[",\s]*([^\n"]+)', re.IGNORECASE)
+            match = pattern.search(complainant_text)
+            
+            if match:
+                # We found the field, now we extract its value.
+                value = match.group(1).strip()
+                field_name = field.lower().replace(' ', '_').replace('/', '_')
+                details[field_name] = clean(value) # Assumes your 'clean' function exists
+                
+        data['complainant_informant'] = details
 
-    # 4️⃣ Accused Details (MODIFIED FOR SECURITY)
-    # This is hardcoded to null to protect personal information.
-    data['accused_details'] = [{
-        "name": None,
-        "address": None
-    }]
+    # 4. Accused Details (Section 7)
+    # Isolate the block between the "accused" heading and the next section "8."
+    accused_block = re.search(r"7\.\s*Details of Known / Suspected / Unknown accused.*?([\s\S]*?)8\.", text)
+    if accused_block:
+        details = {}
+        # Find key-value pairs, which are more loosely structured in this section
+        matches = re.findall(r"([A-Za-z\s/]+)\s*\n+\s*([^\n]+)", accused_block.group(1))
+        # This part is more complex due to OCR variations
+        raw_text = accused_block.group(1)
+        details['name'] = clean(re.search(r'Name of Accused\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Name of Accused\s*([^\n]+)', raw_text, re.I) else None)
+        details['relation'] = clean(re.search(r'Relation\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Relation\s*([^\n]+)', raw_text, re.I) else None)
+        details['nationality'] = clean(re.search(r'Nationality\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Nationality\s*([^\n]+)', raw_text, re.I) else None)
+        details['occupation'] = clean(re.search(r'Occupation\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Occupation\s*([^\n]+)', raw_text, re.I) else None)
+        details['present_address'] = clean(re.search(r'Present Address\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Present Address\s*([^\n]+)', raw_text, re.I) else None)
+        details['permanent_address'] = clean(re.search(r'Permanent Address\s*([^\n]+)', raw_text, re.I).group(1) if re.search(r'Permanent Address\s*([^\n]+)', raw_text, re.I) else None)
+        details['age'] = clean(re.search(r'Age\s*([^\n]+)', raw_text, re.I).group(1).replace('(Approx.)','').strip() if re.search(r'Age\s*([^\n]+)', raw_text, re.I) else None)
+        data['accused_details'] = details
 
-    # 5️⃣ Brief Facts (MODIFIED FOR SECURITY)
-    # The narrative is redacted entirely by setting it to null, as it can contain sensitive details.
-    data['brief_facts'] = None
 
+    # 5. Brief Facts / Narrative (Section 12)
+    # Capture the narrative between "First Information contents" and the next section "13."
+    brief_facts = re.search(r"12\.\s*First Information contents \(Brief Facts\)\s*([\s\S]*?)13\.\s*Action Taken", text)
+    if brief_facts:
+        # Join lines into a single, clean paragraph
+        narrative = ' '.join(brief_facts.group(1).strip().split())
+        data['brief_facts'] = narrative
+
+    # 6. Action and Officer Details (Section 13)
+    # Isolate the final action block to find officer details
+    action_block = re.search(r"13\.\s*Action Taken([\s\S]*?)14\.", text)
+    if action_block:
+        io_details = re.search(r"Directed \(Name of I\.O\.\)\s*(?P<name>.*?)\s*Rank:\s*(?P<rank>.*?)\s*No\.\s*(?P<no>\d+)", action_block.group(1))
+        if io_details:
+            data['investigating_officer'] = {
+                'name': clean(io_details.group('name')),
+                'rank': clean(io_details.group('rank')),
+                'number': clean(io_details.group('no')),
+            }
+    
+    officer_in_charge = re.search(r"Signature of Officer in charge, Police Station\s*[\s\S]*?Name:\s*(?P<name>.*?)\s*Rank:\s*(?P<rank>.*?)\s*No\.:\s*(?P<no>\d+)", text, re.DOTALL)
+    if officer_in_charge:
+        data['officer_in_charge'] = {
+            'name': clean(officer_in_charge.group('name')),
+            'rank': clean(officer_in_charge.group('rank')),
+            'number': clean(officer_in_charge.group('no')),
+        }
+        
     return data
 # --- End of core logic ---
 

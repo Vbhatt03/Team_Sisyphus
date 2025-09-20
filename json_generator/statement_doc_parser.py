@@ -9,7 +9,7 @@ from typing import List
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# This function was already modular, so it remains the same
+# This OCR function remains unchanged as it is already modular
 def extract_text_with_ocrspace_api(pdf_path: str, api_key: str) -> str:
     if not os.path.exists(pdf_path):
         logging.error(f"File not found at path: {pdf_path}")
@@ -45,48 +45,63 @@ def extract_text_with_ocrspace_api(pdf_path: str, api_key: str) -> str:
         return ""
     return "\n".join(full_text)
 
-# --- Core parsing logic (untouched) ---
+# --- Updated core parsing logic for the new PDF format ---
 def parse_statement_data(text: str) -> dict:
-    """Parses the extracted text but redacts sensitive information for security."""
+    """Parses extracted text from the statement.pdf format and redacts sensitive info."""
     data = {}
     def clean_value(value: str | None) -> str | None:
         return value.strip().strip(':., ') if value else None
+
+    # Use a more generic regex to find any police station name
     crime_no = re.search(r"Crime No\s*\.?\s*([\d\/]+)", text, re.IGNORECASE)
-    police_station = re.search(r"Bicholim Police Station", text, re.IGNORECASE)
+    police_station = re.search(r"(\w+\s+Police\s+Station)", text, re.IGNORECASE)
     court = re.search(r"IN THE COURT OF THE (.*?)\n", text, re.IGNORECASE)
     under_sections = re.search(r"U/s (.*?)\n", text, re.IGNORECASE)
+
     data['case_info'] = {
         "crime_no": clean_value(crime_no.group(1)) if crime_no else None,
-        "police_station": "Bicholim Police Station" if police_station else None,
+        "police_station": clean_value(police_station.group(1)) if police_station else None,
         "court": clean_value(court.group(1)) if court else None,
         "under_sections": clean_value(under_sections.group(1)) if under_sections else None
     }
+
+    # Occupation is captured, other personal details are redacted by design
     occupation = re.search(r"Occupation\s*:\s*(.*?)\n", text, re.IGNORECASE)
     data['witness_details'] = {
         "name": None, "father_name": None, "age": None,
         "occupation": clean_value(occupation.group(1)) if occupation else None,
         "address": None
     }
-    statement_type = re.search(r"Statement under section (\d+\s*BNSS)", text, re.IGNORECASE)
-    statement_date = re.search(r"Dated\s*:\s*([\d\.\/]+)", text, re.IGNORECASE)
+
+    # More flexible regex for statement type and date
+    statement_type = re.search(r"Statement under section\s*(.*?)\n", text, re.IGNORECASE)
+    statement_date = re.search(r"Date(?:d)?\s*:\s*([\d\.\/]+)", text, re.IGNORECASE)
     data['statement_details'] = {
-        "type": clean_value(statement_type.group(0)) if statement_type else None,
+        "type": clean_value(f"Statement under section {statement_type.group(1)}") if statement_type else None,
         "date": clean_value(statement_date.group(1)) if statement_date else None
     }
+    
+    # Narrative extraction with updated cleaning logic
     narrative_start_marker = r"I (?:say|do hereby)"
     narrative_end_marker = r"I do not wish to say anything more"
     narrative_block_match = re.search(f"({narrative_start_marker}.*?){narrative_end_marker}", text, re.DOTALL | re.IGNORECASE)
+    
     if narrative_block_match:
         narrative_raw = narrative_block_match.group(1)
         lines = narrative_raw.strip().split('\n')
-        cleaned_lines = [line.strip() for line in lines if not re.match(r"^\s*(\d+|Crime No|Bicholim Police Station|Suman|e)\s*$", line.strip())]
+        # Updated regex to remove artifacts specific to the new PDF format
+        cleaned_lines = [
+            line.strip() for line in lines 
+            if not re.match(r"^\s*(Crime No|Panaji Police Station|Priya|Page \d+)\s*$", line.strip(), re.IGNORECASE)
+        ]
         data['narrative'] = " ".join(cleaned_lines)
     else:
         data['narrative'] = None
+        
     return data
 # --- End of core logic ---
 
-# vvv NEW MODULAR FUNCTION vvv
+# This orchestration function remains unchanged
 def process_statement_pdf(pdf_path: str, api_key: str) -> dict:
     """Orchestrates the extraction and parsing for a single statement PDF."""
     logging.info(f"Processing Statement: {os.path.basename(pdf_path)}")
@@ -94,5 +109,5 @@ def process_statement_pdf(pdf_path: str, api_key: str) -> dict:
     if not statement_text:
         return {"error": "Text extraction failed."}
     
-    parsed_data = parse_statement_data(statement_text) # Calls your original function
+    parsed_data = parse_statement_data(statement_text) # Calls the updated parsing function
     return parsed_data

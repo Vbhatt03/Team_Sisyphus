@@ -72,9 +72,9 @@ def extract_text_from_pdf_in_batches(pdf_path, api_key, batch_size=3):
         logging.error(f"Failed to extract text from '{os.path.basename(pdf_path)}'.")
         raise
 
-# --- UPDATED DETAILED PARSING FUNCTIONS ---
+# --- NEW, FORMAT-SPECIFIC PARSING LOGIC ---
 
-def parse_detail(text, pattern):
+def parse_detail(text, pattern, group=1):
     """
     A generic helper function to run regex, clean the result by removing newlines
     and extra spaces, and return it or None.
@@ -87,31 +87,73 @@ def parse_detail(text, pattern):
     # 1. Replace all newline characters with a space
     # 2. Collapse multiple whitespace characters into a single space
     # 3. Strip leading/trailing whitespace
-    cleaned_text = re.sub(r'\s+', ' ', match.group(1).replace('\n', ' ').replace('\r', ''))
+    cleaned_text = re.sub(r'\s+', ' ', match.group(group).replace('\n', ' ').replace('\r', ''))
     return cleaned_text.strip()
 
-def parse_fsl_samples(text):
-    """Parses the 'Samples Collection for Forensic Science Laboratory' section."""
-    samples = []
-    fsl_section_match = re.search(r"Samples Collection for.*?Forensic Science Laboratory(.*?)Provisional medical opinion", text, re.DOTALL | re.IGNORECASE)
-    fsl_text = fsl_section_match.group(1) if fsl_section_match else ""
+def parse_victim_report(text):
+    """Parses a victim's medical report based on the provided format."""
+    logging.info("Parsing document as Victim Medico-Legal Report.")
+    
+    # Extract name and OPD separately, then combine or handle as needed
+    name_opd_str = parse_detail(text, r"Name/OPD No\.:\s*(.*?)(?=\n)")
+    name, opd_no = (name_opd_str.split('/', 1) + [None])[:2]
+    
+    # Extract samples using a more robust method
+    samples_section = parse_detail(text, r"Sample Collection\s*(.*?)(?=Provisional Medical Opinion)")
+    samples_collected = []
+    if samples_section:
+        # Find all lines that seem to list a collected item
+        potential_samples = re.findall(r"•\s*([^\n\r]+)", samples_section)
+        samples_collected = [s.strip() for s in potential_samples]
 
-    if re.search(r"Vulval swabs.*?(?:Collecke|Collected)", fsl_text, re.IGNORECASE):
-        samples.append("Vulval swabs")
-    if re.search(r"Vaginal swabs.*?(?:Collecke|Collected)", fsl_text, re.IGNORECASE):
-        samples.append("Vaginal swabs")
-    if re.search(r"Vaginal smear.*?(?:Collecke|Collected)", fsl_text, re.IGNORECASE):
-        samples.append("Vaginal smear")
-    if re.search(r"Blood for grouping.*?(?:Collecke|Collected)", fsl_text, re.IGNORECASE):
-        samples.append("Blood for grouping")
-        
-    return samples
+    data = {
+        "report_type": "Victim Medico-Legal Examination",
+        "sr_no": parse_detail(text, r"Sr\. No\.:\s*(\S+)"),
+        "name": name.strip() if name else None,
+        "opd_no": opd_no.strip() if opd_no else None,
+        "age": parse_detail(text, r"Age as reported:\s*([\d\s]+\w+)"),
+        "address": parse_detail(text, r"Address:\s*([^\n\r]+)"),
+        "mlc_no": parse_detail(text, r"MLC No\.:\s*(\S+)"),
+        "police_station": parse_detail(text, r"Police Station:\s*([^\n\r]+)"),
+        "arrival_datetime": parse_detail(text, r"arrival in the hospital:\s*(.*)"),
+        "examination_datetime": parse_detail(text, r"commencement of examination:\s*(.*)"),
+        "history_of_violence": parse_detail(text, r"History of Sexual Violence.*?Description:\s*(.*?)(?=Physical & Genital Examination)"),
+        "genital_examination_findings": parse_detail(text, r"Genitalia:\s*(.*?)(?=Sample Collection)"),
+        "provisional_medical_opinion": parse_detail(text, r"Provisional Medical Opinion\s*(.*?)(?=Date:)"),
+        "samples_collected": samples_collected
+    }
+    return data
+
+def parse_accused_report(text):
+    """Parses an accused's medical report based on the provided format."""
+    logging.info("Parsing document as Accused Medical Examination Report.")
+
+    # Combine Date and Time for a full examination timestamp
+    exam_date = parse_detail(text, r"Date:\s*(\d{2}/\d{2}/\d{4})")
+    exam_time = parse_detail(text, r"Time:\s*(\d{2}:\d{2}\s*[AP]M)")
+    exam_datetime = f"{exam_date}, {exam_time}" if exam_date and exam_time else None
+
+    data = {
+        "report_type": "Accused Medical Examination in Sexual Offences",
+        "sr_no": parse_detail(text, r"Sr\. No\.:\s*(\S+)"),
+        "crime_no": parse_detail(text, r"Crime No\.:\s*([^\n\r]+)"),
+        "name": parse_detail(text, r"Name:\s*([^\n\r]+)"),
+        "residence": parse_detail(text, r"Residence:\s*([^\n\r]+)"),
+        "age": parse_detail(text, r"Age:\s*([\d\s]+\w+)"),
+        "examination_datetime": exam_datetime,
+        "injuries_on_body": parse_detail(text, r"Injuries on the body:\s*(.*?)(?=GENITAL EXAMINATION)"),
+        "genital_examination_findings": parse_detail(text, r"GENITAL EXAMINATION:\s*(.*?)(?=OPINION:)"),
+        "opinion": parse_detail(text, r"OPINION:\s*(.*?)(?=Samples collected:)"),
+        "samples_collected": parse_detail(text, r"Samples collected:\s*(.*)")
+    }
+    return data
 
 def process_medical_pdf(pdf_path, api_key):
     """
-    Main orchestrator function that extracts and parses data, then redacts sensitive information.
+    Main orchestrator function that extracts text, determines the report type,
+    parses the data, and redacts sensitive information.
     """
-    logging.info(f"Processing Victim Medical Report: {os.path.basename(pdf_path)}")
+    logging.info(f"Processing Medical Report: {os.path.basename(pdf_path)}")
     
     try:
         full_ocr_text = extract_text_from_pdf_in_batches(pdf_path, api_key)
@@ -120,34 +162,27 @@ def process_medical_pdf(pdf_path, api_key):
             logging.warning(f"No text extracted from {pdf_path}. Cannot generate report.")
             return {"fileName": os.path.basename(pdf_path), "error": "No text could be extracted."}
 
-        # Assemble the structured JSON object using targeted parsing
-        parsed_data = {
-            "report_type": "Victim Medico-Legal Examination",
-            "sr_no": parse_detail(full_ocr_text, r"Sr\. No\.:\s*(GMC/OBG/SO/F/\s*\d+\|\d{4})"),
-            "name": parse_detail(full_ocr_text, r"Name\.::\s*\n\s*(.+)"),
-            "age": parse_detail(full_ocr_text, r"Age \(as reported\)\s*\.{3,}\s*(\S+)"),
-            "address": parse_detail(full_ocr_text, r"Address\s*(.*?)D/c or-S/"),
-            "mlc_no": None,
-            "police_station": parse_detail(full_ocr_text, r"Brought by.*?(\w+\s+(?:Police|Porce)\s+(?:Station|Stakon))"),
-            "arrival_datetime": parse_detail(full_ocr_text, r"arrival in the hospital\.\.\s*(.*)"),
-            "examination_datetime": parse_detail(full_ocr_text, r"commencement of examination\.\s*(.*)"),
-            "history_of_violence": parse_detail(full_ocr_text, r"15 A\.History of Sexual Violence\s*(.*?)(?=15 B\.)"),
-            "injuries_on_body": parse_detail(full_ocr_text, r"17\. Examination for Injuries on the body if any\s*(.*?)(?=18\. Local examination)"),
-            "genital_examination_findings": {
-                "hymen": parse_detail(full_ocr_text, r"Hymen Perineum\s*\n(.*?)\n"),
-                "general": "External genitalia appear normal"
-            },
-            "provisional_medical_opinion": parse_detail(full_ocr_text, r"22\. Provisional medical opinion\s*(.*?)(?=23\.)"),
-            "samples_collected_fsl": parse_fsl_samples(full_ocr_text)
-        }
+        # Determine report type and call the appropriate parser
+        parsed_data = {}
+        if "Report of Medical Examination in Sexual Offences for Males" in full_ocr_text:
+            parsed_data = parse_accused_report(full_ocr_text)
+        elif "Medico-Legal Examination Report of Sexual Violence" in full_ocr_text:
+            parsed_data = parse_victim_report(full_ocr_text)
+        else:
+            logging.warning(f"Could not determine the report type for {os.path.basename(pdf_path)}.")
+            return {"fileName": os.path.basename(pdf_path), "error": "Unknown report format."}
         
         # --- SENSITIVE DATA REDACTION ---
-        # Hardcode sensitive fields to null (None in Python) to ensure privacy.
-        logging.info("Redacting sensitive information (name, age, address).")
+        # Redact sensitive fields to null (None in Python) to ensure privacy.
+        logging.info("Redacting sensitive personal information (name, age, address/residence).")
         parsed_data["name"] = None
         parsed_data["age"] = None
-        parsed_data["address"] = None
-        
+        # Handle both 'address' and 'residence' keys for redaction
+        if "address" in parsed_data:
+            parsed_data["address"] = None
+        if "residence" in parsed_data:
+            parsed_data["residence"] = None
+            
         return parsed_data
 
     except Exception as e:
