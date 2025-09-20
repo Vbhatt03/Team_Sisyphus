@@ -1,0 +1,24 @@
+{
+  "report_type": "Victim Medico-Legal Examination",
+  "sr_no": null,
+  "name": null,
+  "age": null,
+  "address": null,
+  "mlc_no": null,
+  "police_station": null,
+  "arrival_datetime": null,
+  "examination_datetime": null,
+  "history_of_violence": null,
+  "injuries_on_body": "Details in report",
+  "genital_examination_findings": {
+    "hymen": null,
+    "general": "External genitalia appear normal"
+  },
+  "provisional_medical_opinion": null,
+  "samples_collected_fsl": [
+    "Vulval swabs",
+    "Vaginal swabs",
+    "Vaginal smear",
+    "Blood for grouping"
+  ]
+}
