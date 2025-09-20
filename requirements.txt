@@ -1,6 +1,7 @@
-pdfplumber 
-pytesseract 
-pillow 
-regex
-pymupdf
-python-dateutil
+faiss_cpu==1.11.0.post1
+fitz==0.0.1.dev2
+numpy==2.3.3
+PyYAML==6.0.2
+PyYAML==6.0.2
+Requests==2.32.5
+sentence_transformers==2.2.2

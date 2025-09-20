@@ -35,17 +35,17 @@ GOA POLICE
 
     4. Victim's Statement Summary:
 
-5. Medical Examination Summary (Victim):
+Victim Medical Opinion: Physical and genital examination reveals no evidence of external injury or evidence of recent sexual intercourse. Further laboratory analysis pending.
 
-II. FULL VICTIM STATEMENT
-
-FINAL INVESTIGATION REPORT (AI FEED)
+1. Complainant/Informant Details:
 
 6. Medical Examination Summary (Accused):
 
-III. MEDICAL OPINIONS
+5. Medical Examination Summary (Victim):
 
-1. Complainant/Informant Details:
+Provisional Opinion: On physical and genital examination of the above accused, there is nothing to suggest that he is incapable of performing sexual intercourse.
+
+Accused Medical Opinion: On physical and genital examination of the above accused, there is nothing to suggest that he is incapable of performing sexual intercourse.
 
     ------------------ MEDICAL / EXPERT OPINION ------------------
     Victim Medical/Expert Opinion:
