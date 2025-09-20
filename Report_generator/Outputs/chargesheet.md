@@ -33,19 +33,11 @@ GOA POLICE
 
     On the date and time mentioned above, the accused person Rajesh Sharma, who was working as a tuition teacher, lured the complainant's minor daughter, age 16 years, having fair complexion, medium height, wearing blue school uniform, Height-155cm, medium built, under the pretext of providing study help and took her to a lodge where he committed inappropriate acts against the minor victim. In this connection registered Margao PS Cr. No.95/2024 u/s 142(1) BNS and Sec 12 of POCSO Act.
 
-    4. Victim's Statement Summary:
+    FINAL INVESTIGATION REPORT (AI FEED)
 
-Victim Medical Opinion: Physical and genital examination reveals no evidence of external injury or evidence of recent sexual intercourse. Further laboratory analysis pending.
+This document synthesizes information from the case diary, victim's full statement, and medical reports to provide a comprehensive narrative for analysis.
 
-1. Complainant/Informant Details:
-
-6. Medical Examination Summary (Accused):
-
-5. Medical Examination Summary (Victim):
-
-Provisional Opinion: On physical and genital examination of the above accused, there is nothing to suggest that he is incapable of performing sexual intercourse.
-
-Accused Medical Opinion: On physical and genital examination of the above accused, there is nothing to suggest that he is incapable of performing sexual intercourse.
+==================================================================
 
     ------------------ MEDICAL / EXPERT OPINION ------------------
     Victim Medical/Expert Opinion:
