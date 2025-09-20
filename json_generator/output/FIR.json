@@ -1,0 +1,24 @@
+{
+    "police_station": "In this connection registered Bicholim",
+    "fir_no": "82/2024",
+    "year": null,
+    "fir_date": null,
+    "acts_and_sections": [
+        {
+            "act": "THE BHARATIYA NYAYA SANHITA (BNS), 2023",
+            "section": "137(2)"
+        }
+    ],
+    "complainant_informant": {
+        "name": null,
+        "address": null
+    },
+    "accused_details": [
+        {
+            "name": null,
+            "address": null
+        }
+    ],
+    "brief_facts": null,
+    "source_pdf": "FIR.pdf"
+}
