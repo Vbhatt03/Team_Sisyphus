@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Disposal Memo (Form IF-6)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-section-title {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+        }
+        .table-input {
+             width: 100%;
+             padding: 0.5rem;
+             border: 1px solid #d1d5db;
+             border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+    <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">COURT DISPOSAL MEMO</h1>
+            <p class="text-gray-500 mt-1">(Form IF-6)</p>
+        </header>
+
+        <!-- File Upload Section -->
+        <div class="mb-8 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
+            <label for="jsonFile" class="block text-sm font-medium text-gray-700 mb-2">Upload JSON File to Auto-fill</label>
+            <p class="text-xs text-gray-500 mb-3">Select a JSON file to automatically populate the form fields.</p>
+            <input type="file" id="jsonFile" name="jsonFile" accept=".json" class="mx-auto block w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"/>
+        </div>
+
+        <form action="#" method="POST">
+            <!-- Section 1: Court & Case Details -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Court & Case Details</legend>
+                 <div class="form-grid md:grid-cols-3">
+                     <div class="md:col-span-3">
+                        <label for="court_name" class="block text-sm mb-1">In the Court Of</label>
+                        <input type="text" id="court_name" name="court_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="district" class="block text-sm mb-1">District</label>
+                        <input type="text" id="district" name="district" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="ps" class="block text-sm mb-1">Police Station (P.S.)</label>
+                        <input type="text" id="ps" name="ps" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="year" class="block text-sm mb-1">Year</label>
+                        <input type="number" id="year" name="year" placeholder="YYYY" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="fir_no" class="block text-sm mb-1">F.I.R. No. / Proceedings No.</label>
+                        <input type="text" id="fir_no" name="fir_no" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="fir_date" class="block text-sm mb-1">Date</label>
+                        <input type="date" id="fir_date" name="fir_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="chargesheet_no" class="block text-sm mb-1">Charge-sheet No.</label>
+                        <input type="text" id="chargesheet_no" name="chargesheet_no" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="chargesheet_date" class="block text-sm mb-1">Charge-sheet Date</label>
+                        <input type="date" id="chargesheet_date" name="chargesheet_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="court_case_no" class="block text-sm mb-1">Judicial File / Court Case No.</label>
+                        <input type="text" id="court_case_no" name="court_case_no" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div class="md:col-span-3">
+                        <label for="acts_sections" class="block text-sm mb-1">Acts & Sections of the Law</label>
+                        <input type="text" id="acts_sections" name="acts_sections" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Judgement Details -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Judgement Details</legend>
+                 <div class="form-grid">
+                     <div>
+                        <label for="charge_date" class="block text-sm mb-1">Date of framing charge in Court</label>
+                        <input type="date" id="charge_date" name="charge_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="judgement_date" class="block text-sm mb-1">Date of Judgement</label>
+                        <input type="date" id="judgement_date" name="judgement_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Type of Case</label>
+                        <div class="flex items-center space-x-4 mt-1">
+                            <label><input type="radio" name="case_type" value="summon" class="mr-1"> Summon</label>
+                            <label><input type="radio" name="case_type" value="warrant" class="mr-1"> Warrant</label>
+                        </div>
+                    </div>
+                     <div class="md:col-span-3">
+                        <label for="prosecutor_name" class="block text-sm mb-1">Name(s) of the prosecutor</label>
+                        <input type="text" id="prosecutor_name" name="prosecutor_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+            </fieldset>
+            
+            <!-- Section 3: Accused Persons Disposal -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Details of court disposal in respect of the adult accused persons</legend>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200" id="accused_table">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="p-2 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sl. No.</th>
+                                <th class="p-2 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="p-2 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type of Disposal</th>
+                                <th class="p-2 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Law Convicted Under</th>
+                                <th class="p-2 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Punishment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            
+            <!-- Section 4: Appeal Details -->
+            <fieldset>
+                <legend class="form-section-title">Appeal Details</legend>
+                <div class="form-grid">
+                    <div>
+                        <label class="block text-sm mb-1">Whether appeal preferred?</label>
+                        <div class="flex items-center space-x-4 mt-1">
+                           <label><input type="radio" name="appeal" value="yes" class="mr-1"> Yes</label>
+                           <label><input type="radio" name="appeal" value="no" class="mr-1"> No</label>
+                       </div>
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="appeal_court_name" class="block text-sm mb-1">Name of the Court to which appeal is preferred</label>
+                        <input type="text" id="appeal_court_name" name="appeal_court_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="appeal_date" class="block text-sm mb-1">Date of appeal</label>
+                        <input type="date" id="appeal_date" name="appeal_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label for="final_order" class="block text-sm mb-1">Final order on appeal</label>
+                        <textarea id="final_order" name="final_order" rows="3" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="mt-10 flex justify-end">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">Submit Form</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('jsonFile');
+
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        populateForm(jsonData);
+                    } catch (error) {
+                        console.error("Error parsing JSON file:", error);
+                        alert("There was an error reading the JSON file. Please ensure it is correctly formatted.");
+                    }
+                };
+
+                reader.onerror = function() {
+                    console.error("Error reading file:", reader.error);
+                    alert("Failed to read the file.");
+                };
+
+                reader.readAsText(file);
+            });
+
+            function populateForm(data) {
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const value = data[key];
+                        const element = document.getElementById(key);
+
+                        if (element) {
+                             if (element.type === 'radio') {
+                                const radioToSelect = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                                if (radioToSelect) {
+                                    radioToSelect.checked = true;
+                                }
+                            } else {
+                                element.value = value;
+                            }
+                        } else if (key === 'accused_persons_disposal' && Array.isArray(value)) {
+                            const tableBody = document.querySelector('#accused_table tbody');
+                            tableBody.innerHTML = ''; // Clear existing rows
+                            value.forEach((accused, index) => {
+                                const row = `
+                                    <tr>
+                                        <td class="p-2 border-b">${index + 1}</td>
+                                        <td class="p-2 border-b"><input type="text" class="table-input" value="${accused.name || ''}"></td>
+                                        <td class="p-2 border-b"><input type="text" class="table-input" value="${accused.disposal_type || ''}"></td>
+                                        <td class="p-2 border-b"><input type="text" class="table-input" value="${accused.convicted_law || ''}"></td>
+                                        <td class="p-2 border-b"><input type="text" class="table-input" value="${accused.punishment || ''}"></td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML += row;
+                            });
+                        } else {
+                            const radioGroup = document.getElementsByName(key);
+                            if(radioGroup.length > 0) {
+                                for(const radio of radioGroup){
+                                    if(radio.value === value){
+                                        radio.checked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

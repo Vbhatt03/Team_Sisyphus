@@ -1,0 +1,42 @@
+{
+    "fir_details": {
+        "district": "South Goa",
+        "ps": "Margao Police Station",
+        "year": "2024",
+        "fir_no": "95/2024",
+        "date": "10-10-2024",
+        "time": "21:45"
+    },
+    "acts_and_sections": [],
+    "complainant_informant": {
+        "name": "Rajesh Kumar Sharma",
+        "relation": "Father",
+        "nationality": "Indian",
+        "occupation": "Business",
+        "date_of_birth": "15/05/1978",
+        "age": "46",
+        "present_address": "Rose Gardens, Margao, South Goa, Goa",
+        "permanent_address": "Green Valley, Sector 8, Chandigarh, Punjab"
+    },
+    "accused_details": {
+        "name": "Rajesh Sharma",
+        "relation": "Known",
+        "nationality": "Indian",
+        "occupation": "Teacher",
+        "present_address": "Near Municipal Market, Margao",
+        "permanent_address": "Same as above",
+        "age": "29"
+    },
+    "brief_facts": "On the date and time mentioned above, the accused person Rajesh Sharma, who was working as a tuition teacher, lured the complainant's minor daughter, age 16 years, having fair complexion, medium height, wearing blue school uniform, Height-155cm, medium built, under the pretext of providing study help and took her to a lodge where he committed inappropriate acts against the minor victim. In this connection registered Margao PS Cr. No.95/2024 u/s 142(1) BNS and Sec 12 of POCSO Act.",
+    "investigating_officer": {
+        "name": "SUNIL KUMAR PATIL",
+        "rank": "Sub-Inspector",
+        "number": "1245"
+    },
+    "officer_in_charge": {
+        "name": "ASHOK KUMAR SINGH",
+        "rank": "Inspector",
+        "number": "2156"
+    },
+    "source_pdf": "fir.pdf"
+}

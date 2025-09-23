@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Seizure Memo (Form IF-4)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-section-title {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+    <div class="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">PROPERTY SEIZURE MEMO</h1>
+            <p class="text-gray-500 mt-1">(Form IF-4)</p>
+        </header>
+
+        <!-- File Upload Section -->
+        <div class="mb-8 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
+            <label for="jsonFile" class="block text-sm font-medium text-gray-700 mb-2">Upload JSON File to Auto-fill</label>
+            <p class="text-xs text-gray-500 mb-3">Select a JSON file to automatically populate the form fields.</p>
+            <input type="file" id="jsonFile" name="jsonFile" accept=".json" class="mx-auto block w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"/>
+        </div>
+
+        <form action="#" method="POST">
+            <!-- Section 1: Case Details -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Case and Seizure Details</legend>
+                <div class="form-grid">
+                    <div>
+                        <label for="district" class="block text-sm mb-1">District</label>
+                        <input type="text" id="district" name="district" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="ps" class="block text-sm mb-1">Police Station (P.S.)</label>
+                        <input type="text" id="ps" name="ps" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="year" class="block text-sm mb-1">Year</label>
+                        <input type="number" id="year" name="year" placeholder="YYYY" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="fir_gd_no" class="block text-sm mb-1">FIR No. / GD No.</label>
+                        <input type="text" id="fir_gd_no" name="fir_gd_no" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div>
+                        <label for="fir_date" class="block text-sm mb-1">Date</label>
+                        <input type="date" id="fir_date" name="fir_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="acts_sections" class="block text-sm mb-1">Acts and Sections</label>
+                        <input type="text" id="acts_sections" name="acts_sections" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm mb-1">Name of property seized/received</label>
+                        <div class="flex flex-wrap items-center gap-4 mt-1">
+                            <label><input type="radio" id="property_type_stolen" name="property_type" value="stolen" class="mr-1"> Stolen</label>
+                            <label><input type="radio" id="property_type_unclaimed" name="property_type" value="unclaimed" class="mr-1"> Unclaimed</label>
+                            <label><input type="radio" id="property_type_unlawful" name="property_type" value="unlawful" class="mr-1"> Unlawful Possession</label>
+                            <label><input type="radio" id="property_type_others" name="property_type" value="others" class="mr-1"> Others</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Seizure Location & Time -->
+             <fieldset class="mb-8">
+                <legend class="form-section-title">Seizure Location & Time</legend>
+                 <div class="form-grid">
+                     <div>
+                        <label for="seizure_date" class="block text-sm mb-1">Date of Seizure</label>
+                        <input type="date" id="seizure_date" name="seizure_date" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="seizure_time" class="block text-sm mb-1">Time of Seizure</label>
+                        <input type="time" id="seizure_time" name="seizure_time" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="seizure_address" class="block text-sm mb-1">Address of place from where seized</label>
+                        <textarea id="seizure_address" name="seizure_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="seizure_desc" class="block text-sm mb-1">Description of the place of seizure</label>
+                        <textarea id="seizure_desc" name="seizure_desc" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 3: Person from whom seized -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Person from whom Seized / Recovered</legend>
+                <div class="form-grid md:grid-cols-3">
+                    <div>
+                        <label for="person_name" class="block text-sm mb-1">Name</label>
+                        <input type="text" id="person_name" name="person_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="person_father_name" class="block text-sm mb-1">Father's/Husband's Name</label>
+                        <input type="text" id="person_father_name" name="person_father_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="person_age" class="block text-sm mb-1">Age</label>
+                        <input type="number" id="person_age" name="person_age" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                     <div class="md:col-span-3">
+                        <label for="person_address" class="block text-sm mb-1">Address</label>
+                        <textarea id="person_address" name="person_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 4: Witnesses -->
+            <fieldset class="mb-8">
+                <legend class="form-section-title">Witnesses</legend>
+                <!-- Witness 1 -->
+                <div class="mb-6 p-4 border border-gray-200 rounded-lg">
+                    <h3 class="font-semibold text-gray-700 mb-2">Witness 1</h3>
+                    <div class="form-grid md:grid-cols-3">
+                        <div>
+                            <label for="witness1_name" class="block text-sm mb-1">Name</label>
+                            <input type="text" id="witness1_name" name="witness1_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label for="witness1_father_name" class="block text-sm mb-1">Father's/Husband's Name</label>
+                            <input type="text" id="witness1_father_name" name="witness1_father_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label for="witness1_age" class="block text-sm mb-1">Age</label>
+                            <input type="number" id="witness1_age" name="witness1_age" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="witness1_address" class="block text-sm mb-1">Address</label>
+                            <textarea id="witness1_address" name="witness1_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- Witness 2 -->
+                 <div class="p-4 border border-gray-200 rounded-lg">
+                    <h3 class="font-semibold text-gray-700 mb-2">Witness 2</h3>
+                     <div class="form-grid md:grid-cols-3">
+                         <div>
+                            <label for="witness2_name" class="block text-sm mb-1">Name</label>
+                            <input type="text" id="witness2_name" name="witness2_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label for="witness2_father_name" class="block text-sm mb-1">Father's/Husband's Name</label>
+                            <input type="text" id="witness2_father_name" name="witness2_father_name" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label for="witness2_age" class="block text-sm mb-1">Age</label>
+                            <input type="number" id="witness2_age" name="witness2_age" class="w-full p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="witness2_address" class="block text-sm mb-1">Address</label>
+                            <textarea id="witness2_address" name="witness2_address" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+             <!-- Section 5: Property Details -->
+             <fieldset class="mb-8">
+                <legend class="form-section-title">Property and Disposal Details</legend>
+                 <div class="space-y-4">
+                    <div>
+                        <label for="disposal_perishable" class="block text-sm mb-1">Action taken/recommended for disposal of perishable property:</label>
+                        <textarea id="disposal_perishable" name="disposal_perishable" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                     <div>
+                        <label for="disposal_valuable" class="block text-sm mb-1">Action taken / recommended for keeping of valuable property:</label>
+                        <textarea id="disposal_valuable" name="disposal_valuable" rows="2" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                     <div>
+                        <label class="block text-sm">Identification required:</label>
+                        <div class="flex items-center space-x-4 mt-1">
+                            <label><input type="radio" name="identification_req" value="yes" class="mr-1"> Yes</label>
+                            <label><input type="radio" name="identification_req" value="no" class="mr-1"> No</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="property_details" class="block text-sm mb-1">Details of properties seized / recovered:</label>
+                        <textarea id="property_details" name="property_details" rows="4" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+                </div>
+             </fieldset>
+
+            <div class="mt-10 flex justify-end">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">Submit Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('jsonFile');
+
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        populateForm(jsonData);
+                    } catch (error) {
+                        console.error("Error parsing JSON file:", error);
+                        alert("There was an error reading the JSON file. Please ensure it is correctly formatted.");
+                    }
+                };
+
+                reader.onerror = function() {
+                    console.error("Error reading file:", reader.error);
+                    alert("Failed to read the file.");
+                };
+
+                reader.readAsText(file);
+            });
+
+            function populateForm(data) {
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const value = data[key];
+                        const element = document.getElementById(key);
+
+                        if (element) {
+                             if (element.type === 'radio') {
+                                const radioToSelect = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                                if (radioToSelect) {
+                                    radioToSelect.checked = true;
+                                }
+                            } else {
+                                element.value = value;
+                            }
+                        } else {
+                            // Handle radio groups where the key might not match an ID directly
+                            const radioGroup = document.getElementsByName(key);
+                            if(radioGroup.length > 0) {
+                                for(const radio of radioGroup){
+                                    if(radio.value === value){
+                                        radio.checked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
