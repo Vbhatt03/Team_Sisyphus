@@ -1,0 +1,23 @@
+{
+  "name": "caseflow-dev",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:backend": "cd backend && pip install -r requirements.txt",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "seed": "cd backend && python seed.py",
+    "build": "cd frontend && npm run build",
+    "clean": "rimraf backend/__pycache__ backend/**/__pycache__ backend/caseflow.db data/ frontend/dist",
+    "setup": "npm run install:all && npm run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13"
+  }
+}
