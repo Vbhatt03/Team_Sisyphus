@@ -9,7 +9,7 @@ from typing import List, Dict, Any, Optional
 
 # --- INPUT FILES ---
 # NOTE: Update these paths to match your local file structure.
-DATA_DIR = "D:\\Team_Sisyphus\\Team_Sisyphus\\json_generator\\output"
+DATA_DIR = "json_generator\\output"
 VICTIM_STATEMENT_FILE = os.path.join(DATA_DIR, "statement.json")
 VICTIM_MEDICAL_REPORT_FILE = os.path.join(DATA_DIR, "victim_med_rep.json")
 ACCUSED_MEDICAL_REPORT_FILE = os.path.join(DATA_DIR, "accused_med_rep.json")
@@ -18,7 +18,7 @@ FIR_FILE = os.path.join(DATA_DIR, "FIR.json")
 
 
 # --- OUTPUT FILE ---
-CASE_DIARY_FILE = "D:\\Team_Sisyphus\\Team_Sisyphus\\Report_generator\\Outputs\\case_diary.txt"
+CASE_DIARY_FILE = "Report_generator\\Outputs\\case_diary.txt"
 
 # ===============================================================================
 # SECTION 2: UTILITY FUNCTIONS

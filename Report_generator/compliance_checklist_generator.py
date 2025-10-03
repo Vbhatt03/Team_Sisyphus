@@ -17,7 +17,7 @@ from typing import List, Dict, Any, Optional
 
 # --- INPUT FILES ---
 # NOTE: Update these paths to match your local file structure.
-DATA_DIR = "D:\\Team_Sisyphus\\Team_Sisyphus\\json_generator\\output"
+DATA_DIR = "json_generator\\output"
 FIR_FILE = os.path.join(DATA_DIR, "FIR.json")
 VICTIM_STATEMENT_FILE = os.path.join(DATA_DIR, "statement.json")
 VICTIM_MEDICAL_REPORT_FILE = os.path.join(DATA_DIR, "victim_med_rep.json")
@@ -25,7 +25,7 @@ ACCUSED_MEDICAL_REPORT_FILE = os.path.join(DATA_DIR, "accused_med_rep.json")
 SOP_FILE = os.path.join(DATA_DIR, "rules_output.json")
 
 # --- OUTPUT FILE ---
-CHECKLIST_FILE = "D:\\Team_Sisyphus\\Team_Sisyphus\\Report_generator\\Outputs\\compliance_checklist.md"
+CHECKLIST_FILE = "Report_generator\\Outputs\\compliance_checklist.md"
 
 
 # ===============================================================================

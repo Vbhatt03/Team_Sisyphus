@@ -10,7 +10,7 @@ from statement_doc_parser import process_statement_pdf
 from medical_report_parser import process_medical_pdf
 
 # --- Configuration ---
-CONFIG_FILE = "D:\\Goa_p_hackathon\\Team_Sisyphus\\json_generator\\config.yaml"
+CONFIG_FILE = "json_generator\\config.yaml"
 
 # Configure logging for clear, informative output
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

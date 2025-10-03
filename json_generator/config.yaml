@@ -9,5 +9,5 @@ ocr_space_api_key: "K88629238088957"
 # You can use relative paths (e.g., "pdfs") or absolute paths 
 # (e.g., "D:/Cases/Input" on Windows or "/Users/user/docs/Input" on macOS).
 paths:
-  input_directory: "D:\\Goa_p_hackathon\\New_reports"
-  output_directory: "D:\\Goa_p_hackathon\\Team_Sisyphus\\json_generator\\output"
+  input_directory: "New_reports"
+  output_directory: "json_generator\\output"

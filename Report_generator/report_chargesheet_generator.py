@@ -33,8 +33,8 @@ except ImportError:
 
 # --- INPUT FILES ---
 # NOTE: Update these paths to match your local file structure.
-DATA_DIR = "D:\\Team_Sisyphus\\Team_Sisyphus\\json_generator\\output"
-REPORT_DIR = "D:\\Team_Sisyphus\\Team_Sisyphus\\Report_generator\\Outputs"
+DATA_DIR = "json_generator\\output"
+REPORT_DIR = "Report_generator\Outputs"
 
 VICTIM_STATEMENT_FILE = os.path.join(DATA_DIR, "statement.json")
 VICTIM_MEDICAL_REPORT_FILE = os.path.join(DATA_DIR, "victim_med_rep.json")
